@@ -1,40 +1,47 @@
 namespace Lab1.App.Src.Main.AudioGeneration;
 
-public static class Sinusoid
+/// <summary>
+/// Синусоидальный сигнал: s(t) = A · sin(2πF·t + φ).
+/// </summary>
+public class Sinusoid
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="samplingRate"></param>
-    /// <param name="durationSeconds"></param>
-    /// <param name="frequencyHz">
-    /// Частота колебаний - высота звука или количество полных периодов
-    /// (вверх-вниз) синусоиды за одну секунду
-    /// </param>
-    /// <param name="amplitude">
-    /// Амплитуда -- максимальная высота волны, определяющая громкость
-    /// от 0.0 (тишина) до 1.0 (максимальная громкость без искажений).
-    /// </param>
-    /// <param name="phaseRadians">
-    /// Начальная фаза -- сдвиг волны по времени
-    /// Определяет, из какой точки (с нуля, с вершины или с середины) синусоида начнет
-    /// свое движение в самый первый момент времени t = 0
-    /// </param>
-    /// <returns></returns>
-    public static double[] Generate(
-        int samplingRate,
-        int durationSeconds,
-        double frequencyHz,
-        double amplitude = 1.0,
+    private readonly SamplingRate _samplingRate;
+    private readonly Duration _duration;
+    private readonly Frequency _frequency;
+    private readonly Amplitude _amplitude;
+
+    // Начальная фаза, нормированная к долям периода (фаза в радианах / 2π)
+    private readonly double _phaseOffset;
+
+    /// <param name="phaseRadians">Начальная фаза — сдвиг волны по времени в радианах.</param>
+    public Sinusoid(
+        SamplingRate samplingRate,
+        Duration duration,
+        Frequency frequency,
+        Amplitude amplitude,
         double phaseRadians = 0.0)
     {
-        int totalSamples = durationSeconds * samplingRate;
+        _samplingRate = samplingRate;
+        _duration = duration;
+        _frequency = frequency;
+        _amplitude = amplitude;
+        _phaseOffset = phaseRadians / (2.0 * Math.PI);
+    }
+
+    /// <summary>Генерирует массив отсчётов сигнала.</summary>
+    public double[] Generate()
+    {
+        int totalSamples = _duration.Value * _samplingRate.Value;
         double[] signal = new double[totalSamples];
-        
-        double angularFrequency = 2.0 * Math.PI * frequencyHz / samplingRate;
+
         for (int n = 0; n < totalSamples; n++)
         {
-            signal[n] = amplitude * Math.Sin(angularFrequency * n + phaseRadians);
+            // Нормированная фаза на периоде, θ ∈ [0, 1)
+            double theta = (_frequency.Value * n / _samplingRate.Value + _phaseOffset) % 1.0;
+            // Остаток от деления в C# может быть отрицательным
+            if (theta < 0) theta += 1.0;
+
+            signal[n] = _amplitude.Value * Math.Sin(2.0 * Math.PI * theta);
         }
 
         return signal;
