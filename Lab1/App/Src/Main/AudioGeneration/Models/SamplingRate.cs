@@ -1,4 +1,4 @@
-namespace Lab1.App.Src.Main.AudioGeneration;
+namespace Lab1.App.Src.Main.AudioGeneration.Models;
 
 /// <summary>
 /// Частота дискретизации — количество отсчётов (чисел), обрабатываемых

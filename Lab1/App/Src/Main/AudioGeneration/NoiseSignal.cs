@@ -1,3 +1,5 @@
+using Lab1.App.Src.Main.AudioGeneration.Models;
+
 namespace Lab1.App.Src.Main.AudioGeneration;
 
 /// <summary>
@@ -9,10 +11,14 @@ public static class NoiseSignal
     /// <summary>Белый шум с равномерным распределением амплитуд в диапазоне [-A, +A].</summary>
     public static double[] GenerateUniformNoise(
         SamplingRate samplingRate,
-        Duration duration,
+        DurationInSeconds durationInSeconds,
         Amplitude amplitude)
     {
-        int totalSamples = duration.Value * samplingRate.Value;
+        int samplingRateValue = samplingRate.Value;
+        int durationValue = durationInSeconds.Value;
+        double amplitudeValue = amplitude.Value;
+
+        int totalSamples = durationValue * samplingRateValue;
         double[] signal = new double[totalSamples];
         var random = Random.Shared;
 
@@ -20,7 +26,7 @@ public static class NoiseSignal
         {
             // U ∈ [0, 1), линейно масштабируем в [-A, +A]
             double u = random.NextDouble();
-            signal[n] = amplitude.Value * (2.0 * u - 1.0);
+            signal[n] = amplitudeValue * (2.0 * u - 1.0);
         }
 
         return signal;
@@ -33,14 +39,18 @@ public static class NoiseSignal
     /// </summary>
     public static double[] GenerateGaussianNoise(
         SamplingRate samplingRate,
-        Duration duration,
+        DurationInSeconds durationInSeconds,
         Amplitude amplitude)
     {
-        int totalSamples = duration.Value * samplingRate.Value;
+        int samplingRateValue = samplingRate.Value;
+        int durationValue = durationInSeconds.Value;
+        double amplitudeValue = amplitude.Value;
+
+        int totalSamples = durationValue * samplingRateValue;
         double[] signal = new double[totalSamples];
         var random = Random.Shared;
 
-        double sigma = amplitude.Value / 3.0;
+        double sigma = amplitudeValue / 3.0;
         double twoPi = 2.0 * Math.PI;
 
         for (int n = 0; n < totalSamples; n++)

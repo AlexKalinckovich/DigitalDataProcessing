@@ -1,4 +1,4 @@
-namespace Lab1.App.Src.Main.AudioGeneration;
+namespace Lab1.App.Src.Main.AudioGeneration.Models;
 
 /// <summary>
 /// Амплитуда — пиковая высота сигнала, определяющая громкость:

@@ -1,4 +1,4 @@
-namespace Lab1.App.Src.Main.AudioGeneration;
+namespace Lab1.App.Src.Main.AudioGeneration.Models;
 
 /// <summary>
 /// Частота колебаний — количество полных периодов синусоиды за одну секунду;
