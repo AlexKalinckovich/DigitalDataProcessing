@@ -28,17 +28,11 @@ public static class Sinusoid
 
         for (int n = 0; n < totalSamples; n++)
         {
-            // Нормированная фаза на периоде, θ ∈ [0, 1)
             double theta = (frequencyValue * n / samplingRateValue + phaseOffset) % 1.0;
-            // Остаток от деления в C# может быть отрицательным
-            if (theta < 0)
-            {
-                theta += 1.0;
-            }
-
+            theta = theta < 0 ? theta + 1.0 : theta;
             signal[n] = amplitudeValue * Math.Sin(2.0 * Math.PI * theta);
         }
-
+        
         return signal;
     }
 }

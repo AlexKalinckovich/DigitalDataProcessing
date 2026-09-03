@@ -17,24 +17,20 @@ public static class PulseSignal
         DurationInSeconds durationInSeconds,
         Frequency frequency,
         Amplitude amplitude,
-        double phaseRadians,
-        double dutyRatio)
+        DutyRatio dutyRatio,
+        double phaseRadians)
     {
-        if (dutyRatio < 1.0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(dutyRatio), "Скважность не может быть меньше 1.0.");
-        }
-
         int samplingRateValue = samplingRate.Value;
         int durationValue = durationInSeconds.Value;
         double frequencyValue = frequency.Value;
         double amplitudeValue = amplitude.Value;
-
+        double dutyRatioValue = dutyRatio.Value;
+        
         int totalSamples = durationValue * samplingRateValue;
         double[] signal = new double[totalSamples];
 
         // Коэффициент заполнения: доля периода, в которой сигнал равен +A
-        double dutyCycle = 1.0 / dutyRatio;
+        double dutyCycle = 1.0 / dutyRatioValue;
 
         // Начальная фаза, нормированная к долям периода (фаза в радианах / 2π)
         double phaseOffset = phaseRadians / (2.0 * Math.PI);
@@ -43,15 +39,9 @@ public static class PulseSignal
         {
             // Нормированная фаза на периоде, θ ∈ [0, 1)
             double theta = (frequencyValue * n / samplingRateValue + phaseOffset) % 1.0;
-            // Остаток от деления в C# может быть отрицательным
-            if (theta < 0)
-            {
-                theta += 1.0;
-            }
-
+            theta = theta < 0 ? theta + 1.0 : theta;
             signal[n] = (theta < dutyCycle) ? amplitudeValue : -amplitudeValue;
         }
-
         return signal;
     }
 }

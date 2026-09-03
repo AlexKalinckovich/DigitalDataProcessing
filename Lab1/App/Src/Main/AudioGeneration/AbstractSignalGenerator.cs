@@ -2,18 +2,15 @@ using Lab1.App.Src.Main.AudioGeneration.Models;
 
 namespace Lab1.App.Src.Main.AudioGeneration;
 
-/// <summary>
-/// Треугольный сигнал: линейно нарастает и спадает, без разрывов.
-/// </summary>
-public static class TriangleSignal
+public static class AbstractSignalGenerator
 {
-    /// <param name="phaseRadians">Начальная фаза — сдвиг волны по времени в радианах.</param>
-    public static double[] Generate(
+    public static double[] GenerateThetas(
         SamplingRate samplingRate,
         DurationInSeconds durationInSeconds,
         Frequency frequency,
         Amplitude amplitude,
-        double phaseRadians = 0.0)
+        double phaseRadians,
+        Func<double, double> phaseFunc)
     {
         int samplingRateValue = samplingRate.Value;
         int durationValue = durationInSeconds.Value;
@@ -23,15 +20,17 @@ public static class TriangleSignal
         int totalSamples = durationValue * samplingRateValue;
         double[] signal = new double[totalSamples];
 
+        // Начальная фаза, нормированная к долям периода (фаза в радианах / 2π)
         double phaseOffset = phaseRadians / (2.0 * Math.PI);
 
         for (int n = 0; n < totalSamples; n++)
         {
+            // Нормированная фаза на периоде, θ ∈ [0, 1)
             double theta = (frequencyValue * n / samplingRateValue + phaseOffset) % 1.0;
             theta = theta < 0 ? theta + 1.0 : theta;
-            signal[n] = amplitudeValue * (1.0 - 4.0 * Math.Abs(theta - 0.5));
+            signal[n] = phaseFunc(theta);
         }
-
+        
         return signal;
     }
 }

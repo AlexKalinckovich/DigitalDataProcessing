@@ -45,8 +45,8 @@ Menu BuildSignalMenu()
                     durationInSeconds: new DurationInSeconds(2),
                     frequency: new Frequency(440),
                     amplitude: new Amplitude(0.8),
-                    phaseRadians: 0.0,
-                    dutyRatio: 2.0))),
+                    dutyRatio: new DutyRatio(2.0),
+                    phaseRadians: 0.0))),
             new MenuOption("Шум (равномерный)", () => GenerateAndIgnore(
                 NoiseSignal.GenerateUniformNoise(
                     samplingRate: new SamplingRate(44100),

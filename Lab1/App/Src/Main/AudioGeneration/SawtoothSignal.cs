@@ -30,12 +30,7 @@ public static class SawtoothSignal
         {
             // Нормированная фаза на периоде, θ ∈ [0, 1)
             double theta = (frequencyValue * n / samplingRateValue + phaseOffset) % 1.0;
-            // Остаток от деления в C# может быть отрицательным
-            if (theta < 0)
-            {
-                theta += 1.0;
-            }
-
+            theta = theta < 0 ? theta + 1.0 : theta;
             signal[n] = amplitudeValue * (2.0 * theta - 1.0);
         }
 
