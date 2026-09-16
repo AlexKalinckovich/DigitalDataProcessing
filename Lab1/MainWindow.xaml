@@ -1,0 +1,114 @@
+<Window x:Class="Lab1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Лабораторная работа №1"
+        Height="720" Width="760"
+        MinHeight="600" MinWidth="640"
+        WindowStartupLocation="CenterScreen">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+
+            <TextBlock FontSize="18" FontWeight="Bold" Text="Параметры сигнала"/>
+
+            <GroupBox Margin="0,12,0,0" Header="SamplingRate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="SamplingRateSlider" Grid.Column="0" Minimum="1000" Maximum="192000"
+                            Value="44100" TickFrequency="1000" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="SamplingRateLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="44100" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,8,0,0" Header="DurationInSeconds">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="DurationSlider" Grid.Column="0" Minimum="1" Maximum="10"
+                            Value="2" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <TextBlock x:Name="DurationLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="2" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,8,0,0" Header="Amplitude">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="AmplitudeSlider" Grid.Column="0" Minimum="0.0" Maximum="1.0"
+                            Value="0.8" TickFrequency="0.01" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="AmplitudeLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="0.8" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,8,0,0" Header="DutyRatio">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="DutyRatioSlider" Grid.Column="0" Minimum="1.0" Maximum="10.0"
+                            Value="2.0" TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="DutyRatioLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="2" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,8,0,0" Header="phaseRadians">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="PhaseSlider" Grid.Column="0" Minimum="0.0" Maximum="6.283185307179586"
+                            Value="0.0" TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="PhaseLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="0" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,8,0,0" Header="Frequency">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="FrequencySlider" Grid.Column="0" Minimum="20" Maximum="2000"
+                            Value="440" TickFrequency="10" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="FrequencyLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0"
+                               Text="440" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="0,16,0,0" Header="Генерация">
+                <WrapPanel Margin="8">
+                    <Button x:Name="SinusoidButton" Content="Синусоида" Margin="4" Padding="10,6" Click="SinusoidButton_Click"/>
+                    <Button x:Name="SawtoothButton" Content="Пилообразный" Margin="4" Padding="10,6" Click="SawtoothButton_Click"/>
+                    <Button x:Name="TriangleButton" Content="Треугольный" Margin="4" Padding="10,6" Click="TriangleButton_Click"/>
+                    <Button x:Name="PulseButton" Content="Прямоугольный" Margin="4" Padding="10,6" Click="PulseButton_Click"/>
+                    <Button x:Name="UniformNoiseButton" Content="Шум (равномерный)" Margin="4" Padding="10,6" Click="UniformNoiseButton_Click"/>
+                    <Button x:Name="GaussianNoiseButton" Content="Шум (гауссовский)" Margin="4" Padding="10,6" Click="GaussianNoiseButton_Click"/>
+                    <Button x:Name="PolyphonyButton" Content="Полифония" Margin="4" Padding="10,6" Click="PolyphonyButton_Click"/>
+                    <Button x:Name="AmModButton" Content="АМ" Margin="4" Padding="10,6" Click="AmModButton_Click"/>
+                    <Button x:Name="FmModButton" Content="ЧМ" Margin="4" Padding="10,6" Click="FmModButton_Click"/>
+                </WrapPanel>
+            </GroupBox>
+
+            <GroupBox Margin="0,16,0,0" Header="Результат">
+                <TextBox x:Name="ResultBox" MinHeight="140" IsReadOnly="True"
+                         TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontFamily="Consolas"/>
+            </GroupBox>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</Window>
