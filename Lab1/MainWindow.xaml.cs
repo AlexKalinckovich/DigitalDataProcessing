@@ -52,70 +52,64 @@ public partial class MainWindow : Window
 
     private void SinusoidButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = Sinusoid.Generate(
+        SaveSignal(Sinusoid.Generate(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
             frequency: FrequencyModel,
             amplitude: AmplitudeModel,
-            phaseRadians: PhaseValue);
-        ShowResult(signal);
+            phaseRadians: PhaseValue), "sinusoid.wav");
     }
 
     private void SawtoothButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = SawtoothSignal.Generate(
+        SaveSignal(SawtoothSignal.Generate(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
             frequency: FrequencyModel,
             amplitude: AmplitudeModel,
-            phaseRadians: PhaseValue);
-        ShowResult(signal);
+            phaseRadians: PhaseValue), "sawtooth.wav");
     }
 
     private void TriangleButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = TriangleSignal.Generate(
+        SaveSignal(TriangleSignal.Generate(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
             frequency: FrequencyModel,
             amplitude: AmplitudeModel,
-            phaseRadians: PhaseValue);
-        ShowResult(signal);
+            phaseRadians: PhaseValue), "triangle.wav");
     }
 
     private void PulseButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = PulseSignal.Generate(
+        SaveSignal(PulseSignal.Generate(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
             frequency: FrequencyModel,
             amplitude: AmplitudeModel,
             dutyRatio: new DutyRatio(DutyRatioValue),
-            phaseRadians: PhaseValue);
-        ShowResult(signal);
+            phaseRadians: PhaseValue), "pulse.wav");
     }
 
     private void UniformNoiseButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = NoiseSignal.GenerateUniformNoise(
+        SaveSignal(NoiseSignal.GenerateUniformNoise(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
-            amplitude: AmplitudeModel);
-        ShowResult(signal);
+            amplitude: AmplitudeModel), "uniform_noise.wav");
     }
 
     private void GaussianNoiseButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = NoiseSignal.GenerateGaussianNoise(
+        SaveSignal(NoiseSignal.GenerateGaussianNoise(
             samplingRate: SamplingRateModel,
             durationInSeconds: DurationModel,
-            amplitude: AmplitudeModel);
-        ShowResult(signal);
+            amplitude: AmplitudeModel), "gaussian_noise.wav");
     }
 
     private void PolyphonyButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = Polyphony.Sum(new double[][]
+        var signal = Sum(new double[][]
         {
             Sinusoid.Generate(
                 samplingRate: SamplingRateModel,
@@ -128,12 +122,12 @@ public partial class MainWindow : Window
                 frequency: new Frequency(660),
                 amplitude: new Amplitude(0.3))
         });
-        ShowResult(signal);
+        SaveSignal(signal, "polyphony.wav");
     }
 
     private void AmModButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = Modulation.AmplitudeModulate(
+        var signal = AmplitudeModulate(
             carrier: Sinusoid.Generate(
                 samplingRate: SamplingRateModel,
                 durationInSeconds: DurationModel,
@@ -145,12 +139,12 @@ public partial class MainWindow : Window
                 frequency: new Frequency(5),
                 amplitude: new Amplitude(1.0)),
             depth: 0.5);
-        ShowResult(signal);
+        SaveSignal(signal, "am_modulated.wav");
     }
 
     private void FmModButton_Click(object sender, RoutedEventArgs e)
     {
-        var signal = Modulation.FrequencyModulate(
+        var signal = FrequencyModulate(
             samplingRate: SamplingRateModel,
             amplitude: AmplitudeModel,
             carrierFrequency: FrequencyModel,
@@ -160,14 +154,78 @@ public partial class MainWindow : Window
                 durationInSeconds: DurationModel,
                 frequency: new Frequency(5),
                 amplitude: new Amplitude(1.0)));
-        ShowResult(signal);
+        SaveSignal(signal, "fm_modulated.wav");
     }
 
-    private void ShowResult(double[] signal)
+    private void SaveSignal(double[] signal, string fileName)
+    {
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            FileName = fileName,
+            Filter = "WAV files (*.wav)|*.wav"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            WavWriter.Write(dialog.FileName, SamplingRateModel, signal);
+            ShowResult(signal, dialog.FileName);
+        }
+    }
+
+    private void ShowResult(double[] signal, string filePath)
     {
         var min = signal.Min();
         var max = signal.Max();
         var mean = signal.Average();
-        ResultBox.Text = $"Отсчётов: {signal.Length}\nМинимум: {min:F4}\nМаксимум: {max:F4}\nСреднее: {mean:F4}";
+        ResultBox.Text = $"Сохранено: {filePath}\nОтсчётов: {signal.Length}\nМинимум: {min:F4}\nМаксимум: {max:F4}\nСреднее: {mean:F4}";
+    }
+
+    private static double[] Sum(IReadOnlyList<double[]> signals)
+    {
+        double[] result = new double[signals[0].Length];
+        for (int n = 0; n < result.Length; n++)
+        {
+            double sum = 0.0;
+            for (int i = 0; i < signals.Count; i++)
+            {
+                sum += signals[i][n];
+            }
+            result[n] = sum;
+        }
+
+        return result;
+    }
+
+    private static double[] AmplitudeModulate(double[] carrier, double[] modulator, double depth)
+    {
+        double[] result = new double[carrier.Length];
+        for (int n = 0; n < carrier.Length; n++)
+        {
+            result[n] = carrier[n] * (1.0 + depth * modulator[n]);
+        }
+
+        return result;
+    }
+
+    private static double[] FrequencyModulate(
+        SamplingRate samplingRate,
+        Amplitude amplitude,
+        Frequency carrierFrequency,
+        double frequencyDeviation,
+        double[] modulator)
+    {
+        double samplingRateValue = samplingRate.Value;
+        double amplitudeValue = amplitude.Value;
+        double carrierValue = carrierFrequency.Value;
+
+        double[] result = new double[modulator.Length];
+        double phase = 0.0;
+        for (int n = 0; n < modulator.Length; n++)
+        {
+            phase += 2.0 * Math.PI * (carrierValue + frequencyDeviation * modulator[n]) / samplingRateValue;
+            result[n] = amplitudeValue * Math.Sin(phase);
+        }
+
+        return result;
     }
 }
