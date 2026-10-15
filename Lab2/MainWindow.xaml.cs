@@ -2,9 +2,9 @@ using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Lab1.App.Src.Main.AudioGeneration;
-using Lab1.App.Src.Main.AudioGeneration.Models;
 using Lab2.App.Src.Main;
+using Lab2.App.Src.Main.AudioGeneration;
+using Lab2.App.Src.Main.AudioGeneration.Models;
 
 namespace Lab2;
 
@@ -18,7 +18,6 @@ public partial class MainWindow : Window
         InitializeComponent();
         SubscribeSliderChanges();
         UpdateAllLabels();
-        FilterTypeCombo_SelectionChanged(null, null);
     }
 
     private void SubscribeSliderChanges()
@@ -226,6 +225,11 @@ public partial class MainWindow : Window
 
     private void FilterTypeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (Cutoff2Text == null || Cutoff2Slider == null || Cutoff2Label == null)
+        {
+            return;
+        }
+
         bool isBand = FilterTypeCombo.SelectedIndex == 2 || FilterTypeCombo.SelectedIndex == 3;
         var visibility = isBand ? Visibility.Visible : Visibility.Collapsed;
         Cutoff2Text.Visibility = visibility;
@@ -248,13 +252,14 @@ public partial class MainWindow : Window
 
     private static double RootMeanSquareError(double[] reconstructed, double[] original)
     {
+        int n = Math.Min(reconstructed.Length, original.Length);
         double sum = 0.0;
-        for (int i = 0; i < reconstructed.Length; i++)
+        for (int i = 0; i < n; i++)
         {
             double error = reconstructed[i] - original[i];
             sum += error * error;
         }
-        return Math.Sqrt(sum / reconstructed.Length);
+        return Math.Sqrt(sum / n);
     }
 
     private static double MaxAbs(double[] values)
