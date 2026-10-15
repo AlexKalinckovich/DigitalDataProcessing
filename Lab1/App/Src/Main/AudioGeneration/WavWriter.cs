@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using Lab1.App.Src.Main.AudioGeneration.Models;
 
@@ -17,11 +18,11 @@ public static class WavWriter
         using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
         using var writer = new BinaryWriter(stream);
 
-        writer.Write(Encoding.ASCII.GetBytes("RIFF"));
+        writer.Write("RIFF"u8.ToArray());
         writer.Write(36 + dataSize);
-        writer.Write(Encoding.ASCII.GetBytes("WAVE"));
+        writer.Write("WAVE"u8.ToArray());
 
-        writer.Write(Encoding.ASCII.GetBytes("fmt "));
+        writer.Write("fmt "u8.ToArray());
         writer.Write(16);
         writer.Write((short)1);
         writer.Write(channels);
@@ -30,7 +31,7 @@ public static class WavWriter
         writer.Write((short)blockAlign);
         writer.Write(bitsPerSample);
 
-        writer.Write(Encoding.ASCII.GetBytes("data"));
+        writer.Write("data"u8.ToArray());
         writer.Write(dataSize);
 
         foreach (double sample in samples)

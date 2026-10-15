@@ -2,12 +2,12 @@ using Lab1.App.Src.Main.AudioGeneration.Models;
 
 namespace Lab1.App.Src.Main.AudioGeneration;
 
-/// <summary>
-/// Треугольный сигнал: линейно нарастает и спадает, без разрывов.
-/// </summary>
+
+
+
 public static class TriangleSignal
 {
-    /// <param name="phaseRadians">Начальная фаза — сдвиг волны по времени в радианах.</param>
+    
     public static double[] Generate(
         SamplingRate samplingRate,
         DurationInSeconds durationInSeconds,

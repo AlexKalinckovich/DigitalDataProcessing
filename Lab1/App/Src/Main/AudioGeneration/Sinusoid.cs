@@ -2,12 +2,12 @@ using Lab1.App.Src.Main.AudioGeneration.Models;
 
 namespace Lab1.App.Src.Main.AudioGeneration;
 
-/// <summary>
-/// Синусоидальный сигнал: s(t) = A · sin(2πF·t + φ).
-/// </summary>
+
+
+
 public static class Sinusoid
 {
-    /// <param name="phaseRadians">Начальная фаза — сдвиг волны по времени в радианах.</param>
+    
     public static double[] Generate(
         SamplingRate samplingRate,
         DurationInSeconds durationInSeconds,
@@ -23,7 +23,7 @@ public static class Sinusoid
         int totalSamples = durationValue * samplingRateValue;
         double[] signal = new double[totalSamples];
 
-        // Начальная фаза, нормированная к долям периода (фаза в радианах / 2π)
+        
         double phaseOffset = phaseRadians / (2.0 * Math.PI);
 
         for (int n = 0; n < totalSamples; n++)
