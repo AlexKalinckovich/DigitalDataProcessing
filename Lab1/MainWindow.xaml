@@ -1,0 +1,197 @@
+<Window x:Class="Lab1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Лабораторная работа №1"
+        Height="800" Width="900"
+        MinHeight="700" MinWidth="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <GroupBox Header="SamplingRate" Margin="5">
+                <Grid Width="200">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="SamplingRateSlider" Grid.Column="0" Minimum="1000" Maximum="192000" Value="44100" TickFrequency="1000" IsSnapToTickEnabled="False"/>
+                    <TextBlock x:Name="SamplingRateLabel" Grid.Column="1" MinWidth="50" Margin="10,0,0,0" Text="44100" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="DurationInSeconds" Margin="5">
+                <Grid Width="200">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="DurationSlider" Grid.Column="0" Minimum="1" Maximum="10" Value="2" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                    <TextBlock x:Name="DurationLabel" Grid.Column="1" MinWidth="50" Margin="10,0,0,0" Text="2" TextAlignment="Right"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+
+        <TabControl Grid.Row="1" Margin="10">
+            <TabItem Header="Базовая генерация">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <GroupBox Header="Amplitude" Margin="0,5,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="AmplitudeSlider" Grid.Column="0" Minimum="0.0" Maximum="1.0" Value="0.8" TickFrequency="0.01" IsSnapToTickEnabled="False"/>
+                                <TextBlock x:Name="AmplitudeLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0" Text="0.8" TextAlignment="Right"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="DutyRatio" Margin="0,5,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="DutyRatioSlider" Grid.Column="0" Minimum="1.0" Maximum="10.0" Value="2.0" TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+                                <TextBlock x:Name="DutyRatioLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0" Text="2" TextAlignment="Right"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="phaseRadians" Margin="0,5,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="PhaseSlider" Grid.Column="0" Minimum="0.0" Maximum="6.283185307179586" Value="0.0" TickFrequency="0.1" IsSnapToTickEnabled="False"/>
+                                <TextBlock x:Name="PhaseLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0" Text="0" TextAlignment="Right"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="Frequency" Margin="0,5,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="FrequencySlider" Grid.Column="0" Minimum="20" Maximum="2000" Value="440" TickFrequency="10" IsSnapToTickEnabled="False"/>
+                                <TextBlock x:Name="FrequencyLabel" Grid.Column="1" MinWidth="60" Margin="12,0,0,0" Text="440" TextAlignment="Right"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="Генерация" Margin="0,15,0,0">
+                            <WrapPanel Margin="5">
+                                <Button x:Name="SinusoidButton" Content="Синусоида" Margin="4" Padding="10,6" Click="SinusoidButton_Click"/>
+                                <Button x:Name="SawtoothButton" Content="Пилообразный" Margin="4" Padding="10,6" Click="SawtoothButton_Click"/>
+                                <Button x:Name="TriangleButton" Content="Треугольный" Margin="4" Padding="10,6" Click="TriangleButton_Click"/>
+                                <Button x:Name="PulseButton" Content="Прямоугольный" Margin="4" Padding="10,6" Click="PulseButton_Click"/>
+                                <Button x:Name="UniformNoiseButton" Content="Шум (равномерный)" Margin="4" Padding="10,6" Click="UniformNoiseButton_Click"/>
+                                <Button x:Name="GaussianNoiseButton" Content="Шум (гауссовский)" Margin="4" Padding="10,6" Click="GaussianNoiseButton_Click"/>
+                                <Button x:Name="PolyphonyButton" Content="Полифония" Margin="4" Padding="10,6" Click="PolyphonyButton_Click"/>
+                            </WrapPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Модуляция">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Column="0" Grid.Row="0" Header="Несущий сигнал (Carrier)">
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Тип сигнала:"/>
+                            <ComboBox x:Name="CarrierTypeCombo" SelectedIndex="0" Margin="0,0,0,10">
+                                <ComboBoxItem Content="Синусоида"/>
+                                <ComboBoxItem Content="Пилообразный"/>
+                                <ComboBoxItem Content="Треугольный"/>
+                                <ComboBoxItem Content="Прямоугольный"/>
+                                <ComboBoxItem Content="Шум"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Частота (Hz):"/>
+                            <Slider x:Name="CarrierFreqSlider" Minimum="20" Maximum="2000" Value="440"/>
+                            <TextBlock x:Name="CarrierFreqLabel" Text="440" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Амплитуда:"/>
+                            <Slider x:Name="CarrierAmpSlider" Minimum="0" Maximum="1" Value="0.8"/>
+                            <TextBlock x:Name="CarrierAmpLabel" Text="0.8" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Фаза:"/>
+                            <Slider x:Name="CarrierPhaseSlider" Minimum="0" Maximum="6.2831853" Value="0"/>
+                            <TextBlock x:Name="CarrierPhaseLabel" Text="0" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Скважность:"/>
+                            <Slider x:Name="CarrierDutySlider" Minimum="1" Maximum="10" Value="2"/>
+                            <TextBlock x:Name="CarrierDutyLabel" Text="2" TextAlignment="Right"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="2" Grid.Row="0" Header="Модулирующий сигнал (Modulator)">
+                        <StackPanel Margin="5">
+                            <TextBlock Text="Тип сигнала:"/>
+                            <ComboBox x:Name="ModulatorTypeCombo" SelectedIndex="0" Margin="0,0,0,10">
+                                <ComboBoxItem Content="Синусоида"/>
+                                <ComboBoxItem Content="Пилообразный"/>
+                                <ComboBoxItem Content="Треугольный"/>
+                                <ComboBoxItem Content="Прямоугольный"/>
+                                <ComboBoxItem Content="Шум"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Частота (Hz):"/>
+                            <Slider x:Name="ModulatorFreqSlider" Minimum="1" Maximum="200" Value="5"/>
+                            <TextBlock x:Name="ModulatorFreqLabel" Text="5" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Амплитуда:"/>
+                            <Slider x:Name="ModulatorAmpSlider" Minimum="0" Maximum="1" Value="1.0"/>
+                            <TextBlock x:Name="ModulatorAmpLabel" Text="1.0" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Фаза:"/>
+                            <Slider x:Name="ModulatorPhaseSlider" Minimum="0" Maximum="6.2831853" Value="0"/>
+                            <TextBlock x:Name="ModulatorPhaseLabel" Text="0" TextAlignment="Right" Margin="0,0,0,5"/>
+
+                            <TextBlock Text="Скважность:"/>
+                            <Slider x:Name="ModulatorDutySlider" Minimum="1" Maximum="10" Value="2"/>
+                            <TextBlock x:Name="ModulatorDutyLabel" Text="2" TextAlignment="Right"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Header="Параметры модуляции" Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="Тип модуляции:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <ComboBox x:Name="ModulationTypeCombo" SelectedIndex="0" Width="100">
+                                <ComboBoxItem Content="АМ"/>
+                                <ComboBoxItem Content="ЧМ"/>
+                            </ComboBox>
+
+                            <TextBlock Text="Глубина АМ / Девиация ЧМ:" VerticalAlignment="Center" Margin="20,0,10,0"/>
+                            <Slider x:Name="ModParamSlider" Width="150" Minimum="0.1" Maximum="500" Value="0.5" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="ModParamLabel" Text="0.5" VerticalAlignment="Center" Margin="10,0,0,0" Width="50"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Content="Сгенерировать модулированный сигнал" Margin="0,10,0,0" Padding="10" Click="GenerateModulatedButton_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <GroupBox Grid.Row="2" Margin="10" Header="Результат">
+            <TextBox x:Name="ResultBox" MinHeight="100" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontFamily="Consolas"/>
+        </GroupBox>
+    </Grid>
+</Window>
